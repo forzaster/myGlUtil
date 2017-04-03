@@ -2,8 +2,6 @@
 // Created by n-naka on 2017/01/21.
 //
 
-#include <memory>
-
 #include "GLMesh.h"
 
 GLMesh::GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture) :
@@ -34,6 +32,6 @@ void GLMesh::draw() const {
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, mVertexNum, 1);
 
     if (mProgram) {
-        glDeleteProgram(mProgram);
+        glUseProgram(0);
     }
 }

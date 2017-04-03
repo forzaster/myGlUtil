@@ -127,8 +127,7 @@ void GLObjects::load() {
         int size = sMeshes[i].vertexSize;
         createVBA(&buffer, &vba, sMeshes[i].vertex, size);
         mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba,
-                                                  mShaders.at((int)Shader::VIDEO_TEXTURE_SHADER),
-                                                             0}));
+                                                  mShaders.at(static_cast<int>(sMeshes[i].shader)), 0}));
         if (sMeshes[i].shader == Shader::VIDEO_TEXTURE_SHADER) {
             mMeshes.at(mMeshes.size()-1)->updateTexture(mVideoTexture, true);
         }
