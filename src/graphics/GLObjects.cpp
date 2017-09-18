@@ -20,12 +20,12 @@ static GLuint loadShader(GLenum shaderType, const char* pSource) {
             GLint infoLen = 0;
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
             if (infoLen) {
-                char* buf = (char*) malloc(infoLen);
+                char* buf = (char*) new char[infoLen];
                 if (buf) {
                     glGetShaderInfoLog(shader, infoLen, NULL, buf);
                     LOGE("Could not compile shader %d:\n%s\n",
                          shaderType, buf);
-                    free(buf);
+                    delete buf;
                 }
                 glDeleteShader(shader);
                 shader = 0;
@@ -59,11 +59,11 @@ static GLuint createProgram(const char* pVertexSource, const char* pFragmentSour
             GLint bufLength = 0;
             glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufLength);
             if (bufLength) {
-                char* buf = (char*) malloc(bufLength);
+                char* buf = (char*) new char[bufLength];
                 if (buf) {
                     glGetProgramInfoLog(program, bufLength, NULL, buf);
                     LOGE("Could not link program:\n%s\n", buf);
-                    free(buf);
+                    delete buf;
                 }
             }
             glDeleteProgram(program);
@@ -102,11 +102,11 @@ static void deleteVBA(GLuint buffer, GLuint vba) {
 static GLuint genVideoTexture() {
     GLuint texture;
     glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_EXTERNAL_OES, texture);
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //glBindTexture(GL_TEXTURE_EXTERNAL_OES, texture);
+    //glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     return texture;
 }
 

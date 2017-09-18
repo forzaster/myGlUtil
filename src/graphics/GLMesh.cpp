@@ -14,7 +14,7 @@ GLMesh::~GLMesh() {
 
 void GLMesh::updateTexture(GLuint texture, bool externalOes) {
     mTexture = texture;
-    mTextureTarget = externalOes ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
+    //mTextureTarget = externalOes ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
 }
 
 void GLMesh::draw() const {

@@ -7,12 +7,27 @@
 
 #define GLESv3
 
+#ifdef IOS
+
+#ifdef GLESv3
+#include <OpenGLES/ES3/gl.h>
+#include <OpenGLES/ES3/glext.h>
+#else
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+#endif
+
+#else
+
 #ifdef GLESv3
 #include <GLES3/gl3.h>
 #else
 #include <GLES2/gl2.h>
 #endif
+
 #include <GLES2/gl2ext.h>
+
+#endif
 
 #include "../Log.h"
 
