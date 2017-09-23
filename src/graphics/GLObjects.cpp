@@ -119,8 +119,10 @@ void GLObjects::load() {
         mShaders.push_back(createProgram(sShaderName[i].vs.c_str(), sShaderName[i].fs.c_str()));
     }
 
+#ifndef IOS
     mVideoTexture = genVideoTexture();
-
+#endif
+    
     int meshNum = sizeof(sMeshes) / sizeof(Mesh);
     for (int i = 0; i < meshNum; i++) {
         GLuint buffer, vba;
@@ -128,9 +130,11 @@ void GLObjects::load() {
         createVBA(&buffer, &vba, sMeshes[i].vertex, size);
         mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba,
                                                   mShaders.at(static_cast<int>(sMeshes[i].shader)), 0}));
+#ifndef IOS
         if (sMeshes[i].shader == Shader::VIDEO_TEXTURE_SHADER) {
             mMeshes.at(mMeshes.size()-1)->updateTexture(mVideoTexture, true);
         }
+#endif
     }
 }
 
