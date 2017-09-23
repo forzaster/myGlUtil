@@ -14,8 +14,14 @@
 
 #elif defined(IOS)
 
-#define  LOGI(...)
-#define  LOGE(...)
+#include <CoreFoundation/CoreFoundation.h>
+extern "C" void NSLog(CFStringRef format, ...);
+
+#define IOSLOG(fmt, ...) \
+{ NSLog(CFSTR(fmt), ##__VA_ARGS__); }
+
+#define  LOGI(...) IOSLOG(__VA_ARGS__)
+#define  LOGE(...) IOSLOG(__VA_ARGS__)
 
 #else
 
