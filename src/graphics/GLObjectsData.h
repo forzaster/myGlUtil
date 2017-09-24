@@ -10,10 +10,12 @@
 
 #include "Vertex.h"
 #include "Constant2DShader.h"
+#include "ConstantShader.h"
 #include "VideoTextureShader.h"
 
 enum class Shader {
     CONSTANT_2D_SHADER = 0,
+    CONSTANT_SHADER,
 #ifdef __ANDROID__
     VIDEO_TEXTURE_SHADER,
 #endif
@@ -33,6 +35,7 @@ struct Mesh {
 
 static const ShaderName sShaderName[] = {
     {Constant2DShader::vs(), Constant2DShader::fs()},
+    {ConstantShader::vs(), ConstantShader::fs()},
 #ifdef __ANDROID__
     {VideoTextureShader::vs(), VideoTextureShader::fs()},
 #endif

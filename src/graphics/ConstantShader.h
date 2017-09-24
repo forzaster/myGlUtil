@@ -6,22 +6,23 @@
 //  Copyright © 2017年 n-naka. All rights reserved.
 //
 
-#ifndef Constant2DShader_h
-#define Constant2DShader_h
+#ifndef ConstantShader_h
+#define ConstantShader_h
 
 #include <string>
 #include "ShaderAttribDef.h"
 
-namespace Constant2DShader {
+namespace ConstantShader {
     static auto sVertexShader =
     "#version 300 es\n"
     "layout(location=" STRV(POS_ATTRIB) ") in vec3 pos;\n"
     "layout(location=" STRV(COLOR_ATTRIB) ") in vec4 color;\n"
     "layout(location=" STRV(UV_ATTRIB) ") in vec2 uv;\n"
+    "uniform mat4 vp;\n"
     "out vec4 vColor;\n"
     "out vec2 vUv;\n"
     "void main() {\n"
-    "    gl_Position = vec4(pos, 1.0);\n"
+    "    gl_Position = vp * vec4(pos, 1.0);\n"
     "    vColor = color;\n"
     "    vUv = uv;\n"
     "}\n";
@@ -46,4 +47,4 @@ namespace Constant2DShader {
 };
 
 
-#endif /* Constant2DShader_h */
+#endif /* ConstantShader_h */

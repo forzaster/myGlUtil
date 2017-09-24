@@ -1,16 +1,16 @@
 #ifndef Z_GLMATRIX4_H
 #define Z_GLMATRIX4_H
 
-#include <Vector3.h>
-#include <Vector4.h>
+#include "GLVector3.h"
+#include "GLVector4.h"
 
 template <typename T>
-class GLMatrix4 {
+struct GLMatrix4 {
 public:
     T v[4][4];
     
     GLMatrix4() {
-        memset(v, 0, sizeof(T) * 4 * 4);
+        identify();
     }
     
     GLMatrix4<T>& identify() {

@@ -2,8 +2,7 @@
 #define Z_GLVECTOR4_H
 
 template <typename T>
-class GLVector4 {
-public:
+struct GLVector4 {
     T x;
     T y;
     T z;

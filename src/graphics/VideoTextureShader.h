@@ -11,7 +11,7 @@
 namespace VideoTextureShader {
     static auto sVertexShader =
             "#version 300 es\n"
-                    "layout(location = " STRV(POS_ATTRIB) ") in vec3 pos;\n"
+                    "layout(location=" STRV(POS_ATTRIB) ") in vec3 pos;\n"
                     "layout(location=" STRV(COLOR_ATTRIB) ") in vec4 color;\n"
                     "layout(location=" STRV(UV_ATTRIB) ") in vec2 uv;\n"
                     "out vec4 vColor;\n"

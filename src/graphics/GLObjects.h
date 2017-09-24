@@ -6,6 +6,7 @@
 #define Z_GLOBJECTS_H
 
 #include <memory>
+#include "../math/GLMatrix4.h"
 #include "GLMesh.h"
 
 class GLObjects {
@@ -14,6 +15,8 @@ private:
     std::vector<GLuint> mShaders;
     GLuint mVideoTexture;
     float mVideoAspect;
+    Matrix4f mProjection;
+    
 public:
     GLObjects();
     ~GLObjects() = default;
