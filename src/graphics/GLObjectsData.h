@@ -39,10 +39,10 @@ static const ShaderName sShaderName[] = {
 };
 
 static Vertex sVertex1[] = {
-    {{-1.0f, -1.0f}, {0x00, 0xFF, 0x00}, {0.0f, 1.0f}},
-    {{ 1.0f, -1.0f}, {0x00, 0x00, 0xFF}, {1.0f, 1.0f}},
-    {{-1.0f,  1.0f}, {0xFF, 0x00, 0x00}, {0.0f, 0.0f}},
-    {{ 1.0f,  1.0f}, {0xFF, 0xFF, 0xFF}, {1.0f, 0.0f}},
+    {{-1.0f, -1.0f, 0.0f}, {0x00, 0xFF, 0x00}, {0.0f, 1.0f}},
+    {{ 1.0f, -1.0f, 0.0f}, {0x00, 0x00, 0xFF}, {1.0f, 1.0f}},
+    {{-1.0f,  1.0f, 0.0f}, {0xFF, 0x00, 0x00}, {0.0f, 0.0f}},
+    {{ 1.0f,  1.0f, 0.0f}, {0xFF, 0xFF, 0xFF}, {1.0f, 0.0f}},
 };
 
 static const Mesh sMeshes[] = {

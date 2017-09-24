@@ -15,13 +15,13 @@
 namespace Constant2DShader {
     static auto sVertexShader =
     "#version 300 es\n"
-    "layout(location = " STRV(POS_ATTRIB) ") in vec2 pos;\n"
+    "layout(location = " STRV(POS_ATTRIB) ") in vec3 pos;\n"
     "layout(location=" STRV(COLOR_ATTRIB) ") in vec4 color;\n"
     "layout(location=" STRV(UV_ATTRIB) ") in vec2 uv;\n"
     "out vec4 vColor;\n"
     "out vec2 vUv;\n"
     "void main() {\n"
-    "    gl_Position = vec4(pos, 0.0, 1.0);\n"
+    "    gl_Position = vec4(pos, 1.0);\n"
     "    vColor = color;\n"
     "    vUv = uv;\n"
     "}\n";

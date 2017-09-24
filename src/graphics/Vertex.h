@@ -9,7 +9,7 @@
 #include "gl_lib.h"
 
 struct Vertex {
-    GLfloat pos[2];
+    GLfloat pos[3];
     GLubyte rgba[4];
     GLfloat uv[2];
 };
