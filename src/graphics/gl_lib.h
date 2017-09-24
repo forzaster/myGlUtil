@@ -5,9 +5,13 @@
 #ifndef _GL_LIB_H
 #define _GL_LIB_H
 
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+#endif
+
 #define GLESv3
 
-#ifdef IOS
+#ifdef TARGET_OS_IPHONE
 
 #ifdef GLESv3
 #include <OpenGLES/ES3/gl.h>

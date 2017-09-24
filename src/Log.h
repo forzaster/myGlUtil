@@ -5,6 +5,10 @@
 #ifndef _LOG_H
 #define _LOG_H
 
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+#endif
+
 #ifdef __ANDROID__
 #include <android/log.h>
 
@@ -12,7 +16,7 @@
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
-#elif defined(IOS)
+#elif defined(TARGET_OS_IPHONE)
 
 #include <CoreFoundation/CoreFoundation.h>
 extern "C" void NSLog(CFStringRef format, ...);

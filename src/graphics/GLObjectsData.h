@@ -6,16 +6,16 @@
 #define Z_GLOBJECTSDATA_H
 
 #include <string>
+#include "gl_lib.h"
 
 #include "Vertex.h"
 #include "Constant2DShader.h"
 #include "VideoTextureShader.h"
 
 enum class Shader {
-#ifdef IOS
     CONSTANT_2D_SHADER = 0,
-#else
-    VIDEO_TEXTURE_SHADER = 0,
+#ifdef __ANDROID__
+    VIDEO_TEXTURE_SHADER,
 #endif
     SHADER_NUM
 };
@@ -32,9 +32,8 @@ struct Mesh {
 };
 
 static const ShaderName sShaderName[] = {
-#ifdef IOS
     {Constant2DShader::vs(), Constant2DShader::fs()},
-#else
+#ifdef __ANDROID__
     {VideoTextureShader::vs(), VideoTextureShader::fs()},
 #endif
 };
@@ -47,7 +46,7 @@ static Vertex sVertex1[] = {
 };
 
 static const Mesh sMeshes[] = {
-#ifdef IOS
+#ifdef TARGET_OS_IPHONE
     {sVertex1, sizeof(sVertex1) / sizeof(Vertex), Shader::CONSTANT_2D_SHADER}
 #else
     {sVertex1, sizeof(sVertex1) / sizeof(Vertex), Shader::VIDEO_TEXTURE_SHADER}
