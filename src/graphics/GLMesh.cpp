@@ -14,7 +14,11 @@ GLMesh::~GLMesh() {
 
 void GLMesh::updateTexture(GLuint texture, bool externalOes) {
     mTexture = texture;
-    //mTextureTarget = externalOes ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
+#ifdef __ANDROID__
+    mTextureTarget = externalOes ? GL_TEXTURE_EXTERNAL_OES : GL_TEXTURE_2D;
+#else
+    mTextureTarget = GL_TEXTURE_2D;
+#endif
 }
 
 void GLMesh::draw() const {

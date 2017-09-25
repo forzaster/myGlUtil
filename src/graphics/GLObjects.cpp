@@ -4,6 +4,7 @@
 
 #include <string>
 #include "../Log.h"
+#include "../math/GLMatrix4.h"
 
 #include "Vertex.h"
 #include "GLObjects.h"
@@ -73,7 +74,7 @@ static GLuint createProgram(const char* pVertexSource, const char* pFragmentSour
     return program;
 }
 
-static void createVBA(GLuint *buffer, GLuint* vba, const Vertex *vertex, int size) {
+static void createVBA(GLuint *buffer, GLuint* vba, const Vertex *vertex, int size, Shader shader, GLuint program, Matrix4f& viewProj) {
     glGenBuffers(1, buffer);
     glBindBuffer(GL_ARRAY_BUFFER, *buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * size, vertex, GL_STATIC_DRAW);
@@ -88,6 +89,13 @@ static void createVBA(GLuint *buffer, GLuint* vba, const Vertex *vertex, int siz
     glEnableVertexAttribArray(POS_ATTRIB);
     glEnableVertexAttribArray(COLOR_ATTRIB);
     glEnableVertexAttribArray(UV_ATTRIB);
+    
+    if (shader == Shader::CONSTANT_SHADER) {
+        GLuint id = glGetUniformLocation(program,"vp");
+        glUniform4fv(id, 4, reinterpret_cast<GLfloat*>(viewProj.v));
+    }
+    
+    glBindVertexArray(0);
 }
 
 static void deleteVBA(GLuint buffer, GLuint vba) {
@@ -102,11 +110,13 @@ static void deleteVBA(GLuint buffer, GLuint vba) {
 static GLuint genVideoTexture() {
     GLuint texture;
     glGenTextures(1, &texture);
-    //glBindTexture(GL_TEXTURE_EXTERNAL_OES, texture);
-    //glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    //glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    //glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+#ifdef __ANDROID__
+    glBindTexture(GL_TEXTURE_EXTERNAL_OES, texture);
+    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+#endif
     return texture;
 }
 
@@ -119,18 +129,20 @@ void GLObjects::load() {
         mShaders.push_back(createProgram(sShaderName[i].vs.c_str(), sShaderName[i].fs.c_str()));
     }
 
-#ifndef TARGET_OS_IPHONE
+#ifdef __ANDROID__
     mVideoTexture = genVideoTexture();
 #endif
     
     int meshNum = sizeof(sMeshes) / sizeof(Mesh);
+    Matrix4f viewProj;
+    viewProj.identify();
     for (int i = 0; i < meshNum; i++) {
         GLuint buffer, vba;
         int size = sMeshes[i].vertexSize;
-        createVBA(&buffer, &vba, sMeshes[i].vertex, size);
-        mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba,
-                                                  mShaders.at(static_cast<int>(sMeshes[i].shader)), 0}));
-#ifndef TARGET_OS_IPHONE
+        GLuint program = mShaders.at(static_cast<int>(sMeshes[i].shader));
+        createVBA(&buffer, &vba, sMeshes[i].vertex, size, sMeshes[i].shader, program, viewProj);
+        mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba, program, 0}));
+#ifdef __ANDROID__
         if (sMeshes[i].shader == Shader::VIDEO_TEXTURE_SHADER) {
             mMeshes.at(mMeshes.size()-1)->updateTexture(mVideoTexture, true);
         }
