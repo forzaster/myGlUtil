@@ -6,6 +6,7 @@
 #define Z_GLOBJECTS_H
 
 #include <memory>
+#include "../math/GLQuaternion.h"
 #include "../math/GLMatrix4.h"
 #include "GLMesh.h"
 
@@ -15,6 +16,8 @@ private:
     std::vector<GLuint> mShaders;
     GLuint mVideoTexture;
     float mVideoAspect;
+    Vector3f mCameraPos;
+    Quaternionf mCameraQuat;
     Matrix4f mProjection;
     
 public:
