@@ -5,7 +5,7 @@
 #ifndef Z_GLOBJECTSDATA_H
 #define Z_GLOBJECTSDATA_H
 
-#include "../math/GLMatrix4.h"
+#include "../math/GLVector3.h"
 #include "GLShader.h"
 #include "Vertex.h"
 

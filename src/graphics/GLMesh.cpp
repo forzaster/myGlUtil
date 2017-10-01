@@ -3,7 +3,6 @@
 //
 
 #include "GLMesh.h"
-#include "GLObjectsData.h"
 
 GLMesh::GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture, Shader shader, Matrix4f* mat)
     : mVertexNum(vertexNum),
