@@ -35,7 +35,13 @@ void GLMesh::draw(const Matrix4f& proj) const {
         checkGlError("glUseProgram");
         
         if (mShader == Shader::CONSTANT_SHADER) {
-            Matrix4f mat = proj * mLocalMatrix;
+            static Vector3f axis(0.0f, 1.0f, 0.0f);
+            static float theta = 0.0f;
+            theta += 1.0f;
+            Quaternionf rot(axis, theta);
+            Matrix4f mat = mLocalMatrix;
+            mat.setRotation(rot);
+            mat = proj * mat;
             GLuint id = glGetUniformLocation(mProgram,"mvp");
             glUniformMatrix4fv(id, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(mat.v));
         }

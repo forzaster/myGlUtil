@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "GLVector3.h"
 #include "GLVector4.h"
+#include "GLQuaternion.h"
 
 template <typename T>
 struct GLMatrix4 {
@@ -35,6 +36,29 @@ public:
         return *this;
     }
     
+    GLMatrix4<T>& setRotation(const GLQuaternion<T> q) {
+        T qx2 = q.x * q.x;
+        T qy2 = q.y * q.y;
+        T qz2 = q.z * q.z;
+        T qw2 = q.w * q.w;
+        T qxy = q.x * q.y;
+        T qxz = q.x * q.z;
+        T qxw = q.x * q.w;
+        T qyz = q.y * q.z;
+        T qyw = q.y * q.w;
+        T qzw = q.z * q.w;
+        v[0][0] = qx2 + qy2 - qz2 - qw2;
+        v[1][0] = ((T)2.0f) * (qyz - qxw);
+        v[2][0] = ((T)2.0f) * (qyw - qxz);
+        v[0][1] = ((T)2.0f) * (qyz + qxw);
+        v[1][1] = qx2 - qy2 + qz2 - qw2;
+        v[2][1] = ((T)2.0f) * (qzw - qxy);
+        v[0][2] = ((T)2.0f) * (qyw - qxz);
+        v[1][2] = ((T)2.0f) * (qzw + qxy);
+        v[2][2] = qx2 - qy2 - qz2 + qw2;
+        return *this;
+    }
+
     GLVector4<T> operator*(GLVector4<T>& vec4) const {
         GLVector4<T> ret;
         ret.x = v[0][0] + vec4.x + v[1][0] * vec4.y + v[2][0] * vec4.z + v[3][0] * vec4.w;
