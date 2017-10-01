@@ -28,6 +28,7 @@ public:
     void draw();
     GLuint getVideoTexture() const { return mVideoTexture; };
     void setVideoAspect(float videoAspect, float surfaceAspect);
+    void setPerspective(float aspect, float fovY, float zNear, float zFar);
 };
 
 

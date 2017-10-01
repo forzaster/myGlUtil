@@ -60,6 +60,9 @@ bool GLMain::init(int width, int height) {
     mImpl->mHeight = height;
 
     mImpl->mGLObjects = std::unique_ptr<GLObjects>(new GLObjects());
+    float aspect = width / (float)height;
+    float fovY = M_PI * 45.0f/180.0f;
+    mImpl->mGLObjects->setPerspective(aspect, fovY, 5, 1000);
     mImpl->mGLObjects->setVideoAspect(mImpl->mVideoAspect, (float)width/height);
     mImpl->mGLObjects->load();
 

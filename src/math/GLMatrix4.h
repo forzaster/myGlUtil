@@ -54,17 +54,16 @@ public:
         return ret;
     }
     
-    static GLMatrix4<T> perspective(T left, T top, T right, T bottom, T near, T far) {
-        GLMatrix4<T> mat;
-        mat.identify();
-        mat.v[0][0] = (T)2.0 * near / (right - left);
-        mat.v[2][0] = (right + left) / (right - left);
-        mat.v[1][1] = (T)2.0 * near / (top - bottom);
-        mat.v[2][1] = (top + bottom) / (top - bottom);
-        mat.v[2][2] = -(far + near) / (far - near);
-        mat.v[3][2] = - (T)2.0 * far * near / (far - near);
-        mat.v[2][3] = -1;
-        return mat;
+    GLMatrix4<T>& perspective(T left, T top, T right, T bottom, T near, T far) {
+        identify();
+        v[0][0] = (T)2.0 * near / (right - left);
+        v[2][0] = (right + left) / (right - left);
+        v[1][1] = (T)2.0 * near / (top - bottom);
+        v[2][1] = (top + bottom) / (top - bottom);
+        v[2][2] = -(far + near) / (far - near);
+        v[3][2] = - (T)2.0 * far * near / (far - near);
+        v[2][3] = -1;
+        return *this;
     }
 };
 

@@ -4,8 +4,8 @@
 
 #include "GLMesh.h"
 
-GLMesh::GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture) :
-        mVertexNum(vertexNum), mBuffer(buffer), mVBA(vba), mProgram(program), mTexture(texture) {
+GLMesh::GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture, Shader shader) :
+        mVertexNum(vertexNum), mBuffer(buffer), mVBA(vba), mProgram(program), mTexture(texture), mShader(shader) {
     mTextureTarget = GL_TEXTURE_2D;
 }
 
@@ -21,10 +21,18 @@ void GLMesh::updateTexture(GLuint texture, bool externalOes) {
 #endif
 }
 
-void GLMesh::draw() const {
+void GLMesh::draw(const Matrix4f& proj) const {
     if (mProgram) {
         glUseProgram(mProgram);
         checkGlError("glUseProgram");
+        
+        if (mShader == Shader::CONSTANT_SHADER) {
+            GLuint id = glGetUniformLocation(mProgram,"vp");
+            checkGlError("glGetUniformLocation");
+            glUniformMatrix4fv(id, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(proj.v));
+            checkGlError("glUniform4fv");
+        }
+
     }
 
     if (mTexture) {

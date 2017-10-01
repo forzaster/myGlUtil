@@ -6,7 +6,9 @@
 #define Z_GLNODEMESH_H
 
 #include <vector>
+#include "../math/GLMatrix4.h"
 #include "Vertex.h"
+#include "GLObjectsData.h"
 
 class GLShader;
 
@@ -18,11 +20,12 @@ private:
     GLuint mProgram;
     GLuint mTexture;
     GLenum mTextureTarget;
+    Shader mShader;
 public:
-    GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture);
+    GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture, Shader shader);
     virtual ~GLMesh();
     void updateTexture(GLuint texture, bool externalOes);
-    void draw() const;
+    void draw(const Matrix4f& proj) const;
     GLuint getBuffer() const { return mBuffer; };
     GLuint getVBA() const { return mVBA; };
 };

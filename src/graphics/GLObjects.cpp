@@ -90,11 +90,6 @@ static void createVBA(GLuint *buffer, GLuint* vba, const Vertex *vertex, int siz
     glEnableVertexAttribArray(COLOR_ATTRIB);
     glEnableVertexAttribArray(UV_ATTRIB);
     
-    if (shader == Shader::CONSTANT_SHADER) {
-        GLuint id = glGetUniformLocation(program,"vp");
-        glUniform4fv(id, 4, reinterpret_cast<GLfloat*>(viewProj.v));
-    }
-    
     glBindVertexArray(0);
 }
 
@@ -134,14 +129,12 @@ void GLObjects::load() {
 #endif
     
     int meshNum = sizeof(sMeshes) / sizeof(Mesh);
-    Matrix4f viewProj;
-    viewProj.identify();
     for (int i = 0; i < meshNum; i++) {
         GLuint buffer, vba;
         int size = sMeshes[i].vertexSize;
         GLuint program = mShaders.at(static_cast<int>(sMeshes[i].shader));
-        createVBA(&buffer, &vba, sMeshes[i].vertex, size, sMeshes[i].shader, program, viewProj);
-        mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba, program, 0}));
+        createVBA(&buffer, &vba, sMeshes[i].vertex, size, sMeshes[i].shader, program, mProjection);
+        mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba, program, 0, sMeshes[i].shader}));
 #ifdef __ANDROID__
         if (sMeshes[i].shader == Shader::VIDEO_TEXTURE_SHADER) {
             mMeshes.at(mMeshes.size()-1)->updateTexture(mVideoTexture, true);
@@ -169,7 +162,7 @@ void GLObjects::unload() {
 
 void GLObjects::draw() {
     for (auto it = mMeshes.begin(); it != mMeshes.end(); ++it) {
-        (*it)->draw();
+        (*it)->draw(mProjection);
     }
 }
 
@@ -188,4 +181,10 @@ void GLObjects::setVideoAspect(float videoAspect, float surfaceAspect) {
         sVertex1[2].pos[0] = -x;
         sVertex1[3].pos[0] = x;
     }
+}
+
+void GLObjects::setPerspective(float aspect, float fovY, float zNear, float zFar) {
+    float h2 = zNear * tanf(fovY);
+    float w2 = h2 * aspect;
+    mProjection.perspective(-w2,  h2, w2, -h2, zNear, zFar);
 }
