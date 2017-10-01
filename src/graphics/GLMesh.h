@@ -7,8 +7,8 @@
 
 #include <vector>
 #include "../math/GLMatrix4.h"
+#include "GLShader.h"
 #include "Vertex.h"
-#include "GLObjectsData.h"
 
 class GLShader;
 

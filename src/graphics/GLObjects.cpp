@@ -3,12 +3,27 @@
 //
 
 #include <string>
+#include <functional>
 #include "../Log.h"
 #include "../math/GLMatrix4.h"
 
 #include "Vertex.h"
 #include "GLObjects.h"
 #include "GLObjectsData.h"
+
+#include "Constant2DShader.h"
+#include "ConstantShader.h"
+#include "VideoTextureShader.h"
+
+using GEN_VIDEO_TEX_FUNC = GLuint (*)(void);
+
+static const ShaderName sShaderName[] = {
+    {Constant2DShader::vs(), Constant2DShader::fs()},
+    {ConstantShader::vs(), ConstantShader::fs()},
+#ifdef __ANDROID__
+    {VideoTextureShader::vs(), VideoTextureShader::fs()},
+#endif
+};
 
 static GLuint loadShader(GLenum shaderType, const char* pSource) {
     GLuint shader = glCreateShader(shaderType);
@@ -102,18 +117,20 @@ static void deleteVBA(GLuint buffer, GLuint vba) {
     }
 }
 
-static GLuint genVideoTexture() {
+#ifdef __ANDROID__
+static std::function<GLuint(void)> sGenVideoTexFunc = []() -> GLuint {
     GLuint texture;
     glGenTextures(1, &texture);
-#ifdef __ANDROID__
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, texture);
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-#endif
     return texture;
-}
+};
+#else
+static std::function<GLuint(void)> sGenVideoTexFunc = nullptr;
+#endif
 
 GLObjects::GLObjects() :
 mVideoTexture(0){
@@ -124,9 +141,9 @@ void GLObjects::load() {
         mShaders.push_back(createProgram(sShaderName[i].vs.c_str(), sShaderName[i].fs.c_str()));
     }
 
-#ifdef __ANDROID__
-    mVideoTexture = genVideoTexture();
-#endif
+    if (sGenVideoTexFunc) {
+        mVideoTexture = sGenVideoTexFunc();
+    }
     
     int meshNum = sizeof(sMeshes) / sizeof(Mesh);
     for (int i = 0; i < meshNum; i++) {

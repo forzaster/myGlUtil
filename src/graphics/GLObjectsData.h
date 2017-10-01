@@ -5,35 +5,8 @@
 #ifndef Z_GLOBJECTSDATA_H
 #define Z_GLOBJECTSDATA_H
 
-#include <string>
-#include "gl_lib.h"
-
+#include "GLShader.h"
 #include "Vertex.h"
-#include "Constant2DShader.h"
-#include "ConstantShader.h"
-#include "VideoTextureShader.h"
-
-struct ShaderName {
-    std::string vs;
-    std::string fs;
-};
-
-enum class Shader {
-    CONSTANT_2D_SHADER = 0,
-    CONSTANT_SHADER,
-#ifdef __ANDROID__
-    VIDEO_TEXTURE_SHADER,
-#endif
-    SHADER_NUM
-};
-
-static const ShaderName sShaderName[] = {
-    {Constant2DShader::vs(), Constant2DShader::fs()},
-    {ConstantShader::vs(), ConstantShader::fs()},
-#ifdef __ANDROID__
-    {VideoTextureShader::vs(), VideoTextureShader::fs()},
-#endif
-};
 
 struct Mesh {
     const Vertex* vertex;
@@ -49,7 +22,7 @@ static Vertex sVertex1[] = {
 };
 
 static Vertex sVertex2[] = {
-    {{-1.0f, -1.0f, -10.0f}, {0x00, 0xFF, 0x00}, {0.0f, 1.0f}},
+    {{-1.0f, -1.0f  , -10.0f}, {0x00, 0xFF, 0x00}, {0.0f, 1.0f}},
     {{ 1.0f, -1.0f, -50.0f}, {0x00, 0x00, 0xFF}, {1.0f, 1.0f}},
     {{-1.0f,  1.0f, -10.0f}, {0xFF, 0x00, 0x00}, {0.0f, 0.0f}},
     {{ 1.0f,  1.0f, -50.0f}, {0xFF, 0xFF, 0xFF}, {1.0f, 0.0f}},

@@ -5,6 +5,7 @@
 #ifndef Z_VIDEOTEXTURESHADER_H
 #define Z_VIDEOTEXTURESHADER_H
 
+#ifdef __ANDROID__
 #include <string>
 #include "ShaderAttribDef.h"
 
@@ -42,4 +43,6 @@ namespace VideoTextureShader {
         return std::string(sFragmentShader);
     }
 };
+#endif
+
 #endif //Z_VIDEOTEXTURESHADER_H
