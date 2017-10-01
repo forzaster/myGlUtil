@@ -151,7 +151,9 @@ void GLObjects::load() {
         int size = sMeshes[i].vertexSize;
         GLuint program = mShaders.at(static_cast<int>(sMeshes[i].shader));
         createVBA(&buffer, &vba, sMeshes[i].vertex, size, sMeshes[i].shader, program, mProjection);
-        mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba, program, 0, sMeshes[i].shader}));
+        Matrix4f mat;
+        mat.identify().setTrans(sMeshes[i].posInWorld);
+        mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba, program, 0, sMeshes[i].shader, &mat}));
 #ifdef __ANDROID__
         if (sMeshes[i].shader == Shader::VIDEO_TEXTURE_SHADER) {
             mMeshes.at(mMeshes.size()-1)->updateTexture(mVideoTexture, true);
@@ -203,5 +205,6 @@ void GLObjects::setVideoAspect(float videoAspect, float surfaceAspect) {
 void GLObjects::setPerspective(float aspect, float fovY, float zNear, float zFar) {
     float h2 = zNear * tanf(fovY);
     float w2 = h2 * aspect;
+    LOGI("setPerspective l:%f, t:%f, r:%f, b:%f, zn:%f, zf:%f¥n",-w2, h2, w2, -h2, zNear, zFar);
     mProjection.perspective(-w2,  h2, w2, -h2, zNear, zFar);
 }

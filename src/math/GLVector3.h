@@ -10,7 +10,7 @@ public:
     
     GLVector3() : x((T)0), y((T)0), z((T)0) {
     }
-    GLVector3(T x1, T y1, T z1, T w1) : x(x1), y(y1), z(z1) {
+    GLVector3(T x1, T y1, T z1) : x(x1), y(y1), z(z1) {
     }
     GLVector3(const GLVector3 &v) : x(v.x), y(v.y), z(v.z) {
     }

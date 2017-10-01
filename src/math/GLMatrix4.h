@@ -1,6 +1,7 @@
 #ifndef Z_GLMATRIX4_H
 #define Z_GLMATRIX4_H
 
+#include "Log.h"
 #include "GLVector3.h"
 #include "GLVector4.h"
 
@@ -43,27 +44,47 @@ public:
         return ret;
     }
     
-    GLMatrix4<T> operator*(GLMatrix4<T>& mat4) {
+    GLMatrix4<T> operator*(const GLMatrix4<T>& mat4) const {
         GLMatrix4<T> ret;
         for (int i = 0; i < 4; i++) {
-            ret.v[i][0] = v[0][0] + mat4.v[i][0] + v[1][0] * mat4.v[i][1] + v[2][0] * mat4.v[i][2] + v[3][0] * mat4.v[i][3];
-            ret.v[i][1] = v[0][1] + mat4.v[i][0] + v[1][1] * mat4.v[i][1] + v[2][1] * mat4.v[i][2] + v[3][1] * mat4.v[i][3];
-            ret.v[i][2] = v[0][2] + mat4.v[i][0] + v[1][2] * mat4.v[i][1] + v[2][2] * mat4.v[i][2] + v[3][2] * mat4.v[i][3];
-            ret.v[i][3] = v[0][3] + mat4.v[i][0] + v[1][3] * mat4.v[i][1] + v[2][3] * mat4.v[i][2] + v[3][3] * mat4.v[i][3];
+            ret.v[i][0] = v[0][0] * mat4.v[i][0] + v[1][0] * mat4.v[i][1] + v[2][0] * mat4.v[i][2] + v[3][0] * mat4.v[i][3];
+            ret.v[i][1] = v[0][1] * mat4.v[i][0] + v[1][1] * mat4.v[i][1] + v[2][1] * mat4.v[i][2] + v[3][1] * mat4.v[i][3];
+            ret.v[i][2] = v[0][2] * mat4.v[i][0] + v[1][2] * mat4.v[i][1] + v[2][2] * mat4.v[i][2] + v[3][2] * mat4.v[i][3];
+            ret.v[i][3] = v[0][3] * mat4.v[i][0] + v[1][3] * mat4.v[i][1] + v[2][3] * mat4.v[i][2] + v[3][3] * mat4.v[i][3];
         }
         return ret;
     }
     
+    GLMatrix4<T>& operator*= (GLMatrix4<T>& mat4) {
+        GLMatrix4<T> ret;
+        for (int i = 0; i < 4; i++) {
+            ret.v[i][0] = v[0][0] * mat4.v[i][0] + v[1][0] * mat4.v[i][1] + v[2][0] * mat4.v[i][2] + v[3][0] * mat4.v[i][3];
+            ret.v[i][1] = v[0][1] * mat4.v[i][0] + v[1][1] * mat4.v[i][1] + v[2][1] * mat4.v[i][2] + v[3][1] * mat4.v[i][3];
+            ret.v[i][2] = v[0][2] * mat4.v[i][0] + v[1][2] * mat4.v[i][1] + v[2][2] * mat4.v[i][2] + v[3][2] * mat4.v[i][3];
+            ret.v[i][3] = v[0][3] * mat4.v[i][0] + v[1][3] * mat4.v[i][1] + v[2][3] * mat4.v[i][2] + v[3][3] * mat4.v[i][3];
+        }
+        *this = ret;
+        return *this;
+    }
+
     GLMatrix4<T>& perspective(T left, T top, T right, T bottom, T near, T far) {
         identify();
-        v[0][0] = (T)2.0 * near / (right - left);
+        v[0][0] = (T)2.0f * near / (right - left);
         v[2][0] = (right + left) / (right - left);
-        v[1][1] = (T)2.0 * near / (top - bottom);
+        v[1][1] = (T)2.0f * near / (top - bottom);
         v[2][1] = (top + bottom) / (top - bottom);
         v[2][2] = -(far + near) / (far - near);
-        v[3][2] = - (T)2.0 * far * near / (far - near);
-        v[2][3] = -1;
+        v[3][2] = - (T)2.0f * far * near / (far - near);
+        v[2][3] = -(T)1.0f;
+        v[3][3] = (T)0.0f;
         return *this;
+    }
+    
+    void dump() const {
+        LOGI("%f %f %f %f¥n", v[0][0], v[1][0], v[2][0], v[3][0]);
+        LOGI("%f %f %f %f¥n", v[0][1], v[1][1], v[2][1], v[3][1]);
+        LOGI("%f %f %f %f¥n", v[0][2], v[1][2], v[2][2], v[3][2]);
+        LOGI("%f %f %f %f¥n", v[0][3], v[1][3], v[2][3], v[3][3]);
     }
 };
 

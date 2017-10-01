@@ -21,8 +21,10 @@ private:
     GLuint mTexture;
     GLenum mTextureTarget;
     Shader mShader;
+    Matrix4f mLocalMatrix;
 public:
-    GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture, Shader shader);
+    GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture,
+           Shader shader, Matrix4f *mat = nullptr);
     virtual ~GLMesh();
     void updateTexture(GLuint texture, bool externalOes);
     void draw(const Matrix4f& proj) const;

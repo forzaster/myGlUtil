@@ -3,9 +3,18 @@
 //
 
 #include "GLMesh.h"
+#include "GLObjectsData.h"
 
-GLMesh::GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture, Shader shader) :
-        mVertexNum(vertexNum), mBuffer(buffer), mVBA(vba), mProgram(program), mTexture(texture), mShader(shader) {
+GLMesh::GLMesh(int vertexNum, GLuint buffer, GLuint vba, GLuint program, GLuint texture, Shader shader, Matrix4f* mat)
+    : mVertexNum(vertexNum),
+      mBuffer(buffer),
+      mVBA(vba),
+      mProgram(program),
+      mTexture(texture),
+      mShader(shader) {
+    if (mat) {
+        mLocalMatrix = *mat;
+    }
     mTextureTarget = GL_TEXTURE_2D;
 }
 
@@ -27,10 +36,9 @@ void GLMesh::draw(const Matrix4f& proj) const {
         checkGlError("glUseProgram");
         
         if (mShader == Shader::CONSTANT_SHADER) {
-            GLuint id = glGetUniformLocation(mProgram,"vp");
-            checkGlError("glGetUniformLocation");
-            glUniformMatrix4fv(id, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(proj.v));
-            checkGlError("glUniform4fv");
+            Matrix4f mat = proj * mLocalMatrix;
+            GLuint id = glGetUniformLocation(mProgram,"mvp");
+            glUniformMatrix4fv(id, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(mat.v));
         }
 
     }
