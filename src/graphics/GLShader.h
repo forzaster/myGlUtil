@@ -13,8 +13,8 @@ struct ShaderName {
 };
 
 enum class Shader {
-    CONSTANT_2D_SHADER = 0,
-    CONSTANT_SHADER,
+    SPRITE_SHADER = 0,
+    COLOR_SHADER,
 #ifdef __ANDROID__
     VIDEO_TEXTURE_SHADER,
 #endif

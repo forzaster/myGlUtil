@@ -34,7 +34,7 @@ void GLMesh::draw(const Matrix4f& proj) const {
         glUseProgram(mProgram);
         checkGlError("glUseProgram");
         
-        if (mShader == Shader::CONSTANT_SHADER) {
+        if (mShader == Shader::COLOR_SHADER) {
             static Vector3f axis(0.0f, 1.0f, 0.0f);
             static float theta = 0.0f;
             theta += 1.0f;

@@ -11,15 +11,15 @@
 #include "GLObjects.h"
 #include "GLObjectsData.h"
 
-#include "Constant2DShader.h"
-#include "ConstantShader.h"
+#include "SpriteShader.h"
+#include "ColorShader.h"
 #include "VideoTextureShader.h"
 
 using GEN_VIDEO_TEX_FUNC = GLuint (*)(void);
 
 static const ShaderName sShaderName[] = {
-    {Constant2DShader::vs(), Constant2DShader::fs()},
-    {ConstantShader::vs(), ConstantShader::fs()},
+    {SpriteShader::vs(), SpriteShader::fs()},
+    {ColorShader::vs(), ColorShader::fs()},
 #ifdef __ANDROID__
     {VideoTextureShader::vs(), VideoTextureShader::fs()},
 #endif
