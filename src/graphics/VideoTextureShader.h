@@ -8,9 +8,11 @@
 #ifdef __ANDROID__
 #include <string>
 #include "ShaderAttribDef.h"
+#include "GLShader.h"
 
-namespace VideoTextureShader {
-    static auto sVertexShader =
+class VideoTextureShader : public GLShader {
+public:
+    constexpr static auto sVertexShader =
             "#version 300 es\n"
                     "layout(location=" STRV(POS_ATTRIB) ") in vec3 pos;\n"
                     "layout(location=" STRV(COLOR_ATTRIB) ") in vec4 color;\n"
@@ -23,7 +25,7 @@ namespace VideoTextureShader {
                     "    vUv = uv;\n"
                     "}\n";
 
-    static auto sFragmentShader =
+    constexpr static auto sFragmentShader =
             "#version 300 es\n"
                     "#extension GL_OES_EGL_image_external : require\n"
                     "precision mediump float;\n"
@@ -41,6 +43,9 @@ namespace VideoTextureShader {
 
     static std::string fs() {
         return std::string(sFragmentShader);
+    }
+    
+    VideoTextureShader(GLuint prog, Shader s) : GLShader(prog, s) {
     }
 };
 #endif

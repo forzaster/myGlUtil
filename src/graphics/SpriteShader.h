@@ -11,9 +11,11 @@
 
 #include <string>
 #include "ShaderAttribDef.h"
+#include "GLShader.h"
 
-namespace SpriteShader {
-    static auto sVertexShader =
+class SpriteShader : public GLShader {
+public:
+    constexpr static auto sVertexShader =
     "#version 300 es\n"
     "layout(location=" STRV(POS_ATTRIB) ") in vec3 pos;\n"
     "layout(location=" STRV(COLOR_ATTRIB) ") in vec4 color;\n"
@@ -26,7 +28,7 @@ namespace SpriteShader {
     "    vUv = uv;\n"
     "}\n";
     
-    static auto sFragmentShader =
+    constexpr static auto sFragmentShader =
     "#version 300 es\n"
     "precision mediump float;\n"
     "in vec4 vColor;\n"
@@ -42,6 +44,9 @@ namespace SpriteShader {
     
     static std::string fs() {
         return std::string(sFragmentShader);
+    }
+    
+    SpriteShader(GLuint prog, Shader s) : GLShader(prog, s) {
     }
 };
 

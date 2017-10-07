@@ -11,6 +11,7 @@
 #include "GLObjects.h"
 #include "GLObjectsData.h"
 
+#include "GLShader.h"
 #include "SpriteShader.h"
 #include "ColorShader.h"
 #include "VideoTextureShader.h"
@@ -89,7 +90,7 @@ static GLuint createProgram(const char* pVertexSource, const char* pFragmentSour
     return program;
 }
 
-static void createVBA(GLuint *buffer, GLuint* vba, const Vertex *vertex, int size, Shader shader, GLuint program, Matrix4f& viewProj) {
+static void createVBA(GLuint *buffer, GLuint* vba, const Vertex *vertex, int size) {
     glGenBuffers(1, buffer);
     glBindBuffer(GL_ARRAY_BUFFER, *buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * size, vertex, GL_STATIC_DRAW);
@@ -137,10 +138,12 @@ mVideoTexture(0){
 }
 
 void GLObjects::load() {
-    for (int i = 0; i < (int)Shader::SHADER_NUM; i++) {
-        mShaders.push_back(createProgram(sShaderName[i].vs.c_str(), sShaderName[i].fs.c_str()));
-    }
-
+    mShaders.push_back(std::unique_ptr<GLShader>(new SpriteShader(createProgram(SpriteShader::vs().c_str(), SpriteShader::fs().c_str()), Shader::SPRITE_SHADER)));
+    mShaders.push_back(std::unique_ptr<GLShader>(new ColorShader(createProgram(ColorShader::vs().c_str(), ColorShader::fs().c_str()), Shader::COLOR_SHADER)));
+#ifdef __ANDROID__
+    mShaders.push_back(std::unique_ptr<GLShader>(new VideoTextureShader(createProgram(VideoTextureShader::vs().c_str(), VideoTextureShader::fs().c_str()), Shader::VIDEO_TEXTURE_SHADER)));
+#endif
+    
     if (sGenVideoTexFunc) {
         mVideoTexture = sGenVideoTexFunc();
     }
@@ -149,11 +152,11 @@ void GLObjects::load() {
     for (int i = 0; i < meshNum; i++) {
         GLuint buffer, vba;
         int size = sMeshes[i].vertexSize;
-        GLuint program = mShaders.at(static_cast<int>(sMeshes[i].shader));
-        createVBA(&buffer, &vba, sMeshes[i].vertex, size, sMeshes[i].shader, program, mProjection);
+        GLShader* shader = mShaders.at(static_cast<int>(sMeshes[i].shader)).get();
+        createVBA(&buffer, &vba, sMeshes[i].vertex, size);
         Matrix4f mat;
         mat.identify().setTrans(sMeshes[i].posInWorld);
-        mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba, program, 0, sMeshes[i].shader, &mat}));
+        mMeshes.push_back(std::unique_ptr<GLMesh>(new GLMesh{size, buffer, vba, 0, shader, &mat}));
 #ifdef __ANDROID__
         if (sMeshes[i].shader == Shader::VIDEO_TEXTURE_SHADER) {
             mMeshes.at(mMeshes.size()-1)->updateTexture(mVideoTexture, true);
@@ -164,7 +167,7 @@ void GLObjects::load() {
 
 void GLObjects::unload() {
     for (auto it = mShaders.begin(); it != mShaders.end(); ++it) {
-        glDeleteProgram(*it);
+        (*it)->unload();
     }
     mShaders.clear();
 

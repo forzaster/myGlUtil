@@ -9,11 +9,12 @@
 #include "../math/GLQuaternion.h"
 #include "../math/GLMatrix4.h"
 #include "GLMesh.h"
+#include "GLShader.h"
 
 class GLObjects {
 private:
     std::vector<std::unique_ptr<GLMesh>> mMeshes;
-    std::vector<GLuint> mShaders;
+    std::vector<std::unique_ptr<GLShader>> mShaders;
     GLuint mVideoTexture;
     float mVideoAspect;
     Vector3f mCameraPos;
