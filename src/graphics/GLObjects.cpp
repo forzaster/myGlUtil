@@ -18,14 +18,6 @@
 
 using GEN_VIDEO_TEX_FUNC = GLuint (*)(void);
 
-static const ShaderName sShaderName[] = {
-    {SpriteShader::vs(), SpriteShader::fs()},
-    {ColorShader::vs(), ColorShader::fs()},
-#ifdef __ANDROID__
-    {VideoTextureShader::vs(), VideoTextureShader::fs()},
-#endif
-};
-
 static GLuint loadShader(GLenum shaderType, const char* pSource) {
     GLuint shader = glCreateShader(shaderType);
     if (shader) {
