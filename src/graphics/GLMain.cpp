@@ -73,6 +73,10 @@ bool GLMain::init(int width, int height) {
     return true;
 }
 
+void GLMain::setImage(int width, int height, int bytesPerPixel, const uint8_t* data) {
+    LOGI("setImage %dx%d, %d bytesPerPixel, data=%p", width, height, bytesPerPixel, data);
+}
+
 void GLMain::draw() {
     static float grey;
     grey += 0.01f;

@@ -13,6 +13,7 @@ public:
     ~GLMain();
 
     bool init(int width, int height);
+    void setImage(int width, int height, int bytesPerPixel, const uint8_t* data);
     void draw();
     bool resize(int width, int height);
     unsigned int genTexture();
