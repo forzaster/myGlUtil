@@ -75,6 +75,7 @@ bool GLMain::init(int width, int height) {
 
 void GLMain::setImage(int width, int height, int bytesPerPixel, const uint8_t* data) {
     LOGI("setImage %dx%d, %d bytesPerPixel, data=%p", width, height, bytesPerPixel, data);
+    mImpl->mGLObjects->setImage(width, height, bytesPerPixel, data);
 }
 
 void GLMain::draw() {

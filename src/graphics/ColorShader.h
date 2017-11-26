@@ -1,5 +1,5 @@
 //
-//  Constant2DShader.h
+//  ColorShader.h
 //  GameProto
 //
 //  Created by n-naka on 2017/09/23.
@@ -48,6 +48,10 @@ public:
     }
     
     ColorShader(GLuint prog, Shader s) : GLShader(prog, s) {
+    }
+    
+    virtual bool is3D() {
+        return true;
     }
 };
 

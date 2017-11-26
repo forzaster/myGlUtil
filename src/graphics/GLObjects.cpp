@@ -14,6 +14,7 @@
 #include "GLShader.h"
 #include "SpriteShader.h"
 #include "ColorShader.h"
+#include "TextureShader.h"
 #include "VideoTextureShader.h"
 
 using GEN_VIDEO_TEX_FUNC = GLuint (*)(void);
@@ -110,6 +111,18 @@ static void deleteVBA(GLuint buffer, GLuint vba) {
     }
 }
 
+static GLuint genNormalTexture() {
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    return texture;
+}
+
 #ifdef __ANDROID__
 static std::function<GLuint(void)> sGenVideoTexFunc = []() -> GLuint {
     GLuint texture;
@@ -126,12 +139,14 @@ static std::function<GLuint(void)> sGenVideoTexFunc = nullptr;
 #endif
 
 GLObjects::GLObjects() :
-mVideoTexture(0){
+mVideoTexture(0),
+mTexture(0) {
 }
 
 void GLObjects::load() {
     mShaders.push_back(std::unique_ptr<GLShader>(new SpriteShader(createProgram(SpriteShader::vs().c_str(), SpriteShader::fs().c_str()), Shader::SPRITE_SHADER)));
     mShaders.push_back(std::unique_ptr<GLShader>(new ColorShader(createProgram(ColorShader::vs().c_str(), ColorShader::fs().c_str()), Shader::COLOR_SHADER)));
+    mShaders.push_back(std::unique_ptr<GLShader>(new TextureShader(createProgram(TextureShader::vs().c_str(), TextureShader::fs().c_str()), Shader::TEXTURE_SHADER)));
 #ifdef __ANDROID__
     mShaders.push_back(std::unique_ptr<GLShader>(new VideoTextureShader(createProgram(VideoTextureShader::vs().c_str(), VideoTextureShader::fs().c_str()), Shader::VIDEO_TEXTURE_SHADER)));
 #endif
@@ -139,6 +154,8 @@ void GLObjects::load() {
     if (sGenVideoTexFunc) {
         mVideoTexture = sGenVideoTexFunc();
     }
+    
+    mTexture = genNormalTexture();
     
     int meshNum = sizeof(sMeshes) / sizeof(Mesh);
     for (int i = 0; i < meshNum; i++) {
@@ -154,6 +171,9 @@ void GLObjects::load() {
             mMeshes.at(mMeshes.size()-1)->updateTexture(mVideoTexture, true);
         }
 #endif
+        if (sMeshes[i].shader == Shader::TEXTURE_SHADER) {
+            mMeshes.at(mMeshes.size()-1)->updateTexture(mTexture, false);
+        }
     }
 }
 
@@ -171,6 +191,11 @@ void GLObjects::unload() {
     if (mVideoTexture) {
         glDeleteTextures(1, &mVideoTexture);
         mVideoTexture = 0;
+    }
+    
+    if (mTexture) {
+        glDeleteTextures(1, &mTexture);
+        mTexture = 0;
     }
 }
 
@@ -202,4 +227,32 @@ void GLObjects::setPerspective(float aspect, float fovY, float zNear, float zFar
     float w2 = h2 * aspect;
     LOGI("setPerspective l:%f, t:%f, r:%f, b:%f, zn:%f, zf:%f¥n",-w2, h2, w2, -h2, zNear, zFar);
     mProjection.perspective(-w2,  h2, w2, -h2, zNear, zFar);
+}
+
+void GLObjects::setImage(int width, int height, int bytesPerPixel, const uint8_t* data) {
+    if (mTexture) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mTexture);
+        switch (bytesPerPixel) {
+            case 4:
+                glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+                break;
+            case 2:
+            {
+                glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
+                unsigned short* buf = new unsigned short[width * height];
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        unsigned short val = *((unsigned short*)(data + (x + y * width) * 2));
+                        buf[x + y * width] = (val << 1) | 1;
+                    }
+                }
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, width, height, 0, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, buf);
+                delete[] buf;
+            } break;
+            default:
+                break;
+        }
+    }
 }

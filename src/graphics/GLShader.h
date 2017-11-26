@@ -16,6 +16,7 @@ struct ShaderName {
 enum class Shader {
     SPRITE_SHADER = 0,
     COLOR_SHADER,
+    TEXTURE_SHADER,
 #ifdef __ANDROID__
     VIDEO_TEXTURE_SHADER,
 #endif
@@ -39,7 +40,7 @@ public:
             glUseProgram(mProgram);
             checkGlError("glUseProgram");
             
-            if (mvp && mShader == Shader::COLOR_SHADER) {
+            if (mvp && is3D()) {
                 GLuint id = glGetUniformLocation(mProgram,"mvp");
                 glUniformMatrix4fv(id, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(mvp->v));
             }
@@ -64,6 +65,8 @@ public:
     GLuint getProgram() const {
         return mProgram;
     }
+    
+    virtual bool is3D() = 0;
 };
 
 #endif // Z_GLSHADER_H

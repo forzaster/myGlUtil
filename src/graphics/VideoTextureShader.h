@@ -47,6 +47,10 @@ public:
     
     VideoTextureShader(GLuint prog, Shader s) : GLShader(prog, s) {
     }
+    
+    virtual bool is3D() {
+        return false;
+    }
 };
 #endif
 

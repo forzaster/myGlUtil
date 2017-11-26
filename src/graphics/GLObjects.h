@@ -16,6 +16,7 @@ private:
     std::vector<std::unique_ptr<GLMesh>> mMeshes;
     std::vector<std::unique_ptr<GLShader>> mShaders;
     GLuint mVideoTexture;
+    GLuint mTexture;
     float mVideoAspect;
     Vector3f mCameraPos;
     Quaternionf mCameraQuat;
@@ -30,6 +31,7 @@ public:
     GLuint getVideoTexture() const { return mVideoTexture; };
     void setVideoAspect(float videoAspect, float surfaceAspect);
     void setPerspective(float aspect, float fovY, float zNear, float zFar);
+    void setImage(int width, int height, int bytesPerPixel, const uint8_t* data);
 };
 
 
