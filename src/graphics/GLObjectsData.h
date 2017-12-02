@@ -33,7 +33,8 @@ static Vertex sVertex2[] = {
 static const Mesh sMeshes[] = {
 #ifdef TARGET_OS_IPHONE
     {{0.0f, 0.0f, 0.0f}, sVertex1, sizeof(sVertex1) / sizeof(Vertex), Shader::SPRITE_SHADER},
-    {{0.0f, 0.0f, -10.0f}, sVertex2, sizeof(sVertex2) / sizeof(Vertex), Shader::TEXTURE_SHADER}
+//    {{0.0f, 0.0f, -10.0f}, sVertex2, sizeof(sVertex2) / sizeof(Vertex), Shader::TEXTURE_SHADER}
+    {{0.0f, 0.0f, -10.0f}, sVertex2, sizeof(sVertex2) / sizeof(Vertex), Shader::SOBEL_SHADER}
 #else
     {{0.0f, 0.0f, 0.0f}, sVertex1, sizeof(sVertex1) / sizeof(Vertex), Shader::VIDEO_TEXTURE_SHADER},
     {{0.0f, 0.0f, -10.0f}, sVertex2, sizeof(sVertex2) / sizeof(Vertex), Shader::COLOR_SHADER}

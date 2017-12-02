@@ -15,6 +15,7 @@
 #include "SpriteShader.h"
 #include "ColorShader.h"
 #include "TextureShader.h"
+#include "SobelShader.h"
 #include "VideoTextureShader.h"
 
 using GEN_VIDEO_TEX_FUNC = GLuint (*)(void);
@@ -147,6 +148,7 @@ void GLObjects::load() {
     mShaders.push_back(std::unique_ptr<GLShader>(new SpriteShader(createProgram(SpriteShader::vs().c_str(), SpriteShader::fs().c_str()), Shader::SPRITE_SHADER)));
     mShaders.push_back(std::unique_ptr<GLShader>(new ColorShader(createProgram(ColorShader::vs().c_str(), ColorShader::fs().c_str()), Shader::COLOR_SHADER)));
     mShaders.push_back(std::unique_ptr<GLShader>(new TextureShader(createProgram(TextureShader::vs().c_str(), TextureShader::fs().c_str()), Shader::TEXTURE_SHADER)));
+    mShaders.push_back(std::unique_ptr<GLShader>(new SobelShader(createProgram(SobelShader::vs().c_str(), SobelShader::fs().c_str()), Shader::SOBEL_SHADER)));
 #ifdef __ANDROID__
     mShaders.push_back(std::unique_ptr<GLShader>(new VideoTextureShader(createProgram(VideoTextureShader::vs().c_str(), VideoTextureShader::fs().c_str()), Shader::VIDEO_TEXTURE_SHADER)));
 #endif

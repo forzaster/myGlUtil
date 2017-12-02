@@ -17,6 +17,7 @@ enum class Shader {
     SPRITE_SHADER = 0,
     COLOR_SHADER,
     TEXTURE_SHADER,
+    SOBEL_SHADER,
 #ifdef __ANDROID__
     VIDEO_TEXTURE_SHADER,
 #endif
