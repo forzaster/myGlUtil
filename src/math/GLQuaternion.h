@@ -1,6 +1,7 @@
 #ifndef Z_GLQUATERNION_H
 #define Z_GLQUATERNION_H
 
+#include <math.h>
 #include "GLVector3.h"
 
 template <typename T>

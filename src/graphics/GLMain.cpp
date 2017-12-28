@@ -3,6 +3,7 @@
 //
 
 #include <string>
+#include <math.h>
 #include "../Log.h"
 #include "GLMain.h"
 #include "GLObjects.h"
