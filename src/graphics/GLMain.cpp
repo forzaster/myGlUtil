@@ -95,6 +95,7 @@ void GLMain::draw() {
 
 bool GLMain::resize(int width, int height) {
     if (mImpl->mInitialized) {
+        LOGI("resize %dx%d", width, height);
         glViewport(0, 0, width, height);
         return true;
     }
@@ -106,6 +107,7 @@ unsigned int GLMain::genTexture() {
 }
 
 void GLMain::setVideoAspect(float aspect) {
+    LOGI("setVideoAspect %f", aspect);
     mImpl->mVideoAspect = aspect;
     if (mImpl->mGLObjects) {
         mImpl->mGLObjects->setVideoAspect(aspect, (float)mImpl->mWidth/mImpl->mHeight);
