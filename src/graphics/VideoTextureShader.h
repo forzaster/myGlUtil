@@ -29,7 +29,8 @@ public:
 
     constexpr static auto sFragmentShader =
             "#version 300 es\n"
-            "#extension GL_OES_EGL_image_external : require\n"
+            "#extension GL_OES_EGL_image_external_essl3 : enable\n"
+            "//#extension GL_OES_EGL_image_external : require\n"
             "precision mediump float;\n"
             "uniform samplerExternalOES tex;\n"
             "in vec4 vColor;\n"
