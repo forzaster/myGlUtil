@@ -10,6 +10,8 @@
 #include "ShaderAttribDef.h"
 #include "GLShader.h"
 
+#define REDUCE_COLOR
+
 class VideoTextureShader : public GLShader {
 public:
     constexpr static auto sVertexShader =
@@ -47,6 +49,15 @@ public:
             "    vec4 dy = -c00 + c02 - c10 * 2.0 + c12 * 2.0 - c20 + c22;\n"
             "    vec4 c = vec4(1.0, 1.0, 1.0, 1.0) - sqrt(dx * dx + dy * dy) * 0.5;\n"
             "    outColor = vec4(c.yzw, 1.0f);\n"
+#elif defined(REDUCE_COLOR)
+            "    vec4 c = texture(tex, vUv);\n"
+//                    "    float r = float(int(c.x * 5.0f))/5.0f;\n"
+//                    "    float g = float(int(c.y * 5.0f))/5.0f;\n"
+//                    "    float b = float(int(c.z * 5.0f))/5.0f;\n"
+                    "    float r = c.x < 0.4f ? 0.2f : (c.x < 0.6f ? 0.5f : (c.x < 0.8f ? 0.7f : 1.0f));\n"
+                    "    float g = c.y < 0.4f ? 0.2f : (c.y < 0.6f ? 0.5f : (c.y < 0.8f ? 0.7f : 1.0f));\n"
+                    "    float b = c.z < 0.4f ? 0.2f : (c.z < 0.6f ? 0.5f : (c.z < 0.8f ? 0.7f : 1.0f));\n"
+            "    outColor = vec4(r, g, b, 1.0f);\n"
 #else
             "    outColor = texture(tex, vUv);\n"
 #endif
